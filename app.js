@@ -15,9 +15,9 @@ const ItemCtrl = (function(){
   //Data Structure (State)
   const data = {
     items: [
-      {id: 0, name: 'Steak Dinner', calories:'1200'},
-      {id: 1, name: 'Cookie', calories:'400'},
-      {id: 2, name: 'Eggs', calories:'300'}
+      // {id: 0, name: 'Steak Dinner', calories:'1200'},
+      // {id: 1, name: 'Cookie', calories:'400'},
+      // {id: 2, name: 'Eggs', calories:'300'}
     ],
     currentItem: null,
     totalCalories: 0
@@ -90,6 +90,8 @@ const UICtrl = (function(){
       }
     },
     addListItem: function(item){
+      //Show the list
+      document.querySelector(UISelectors.itemList).style.display = 'block';
       //Create li element
       const li = document.createElement('li');
       //Add class
@@ -103,11 +105,20 @@ const UICtrl = (function(){
       </a>`;
       //Insert item
       document.querySelector(UISelectors.itemList).insertAdjacentElement('beforeend', li);
-
     },
+    
     getSelectors: function(){
       return UISelectors;
-    }
+    },
+
+    clearInput: function(){
+      document.querySelector(UISelectors.itemNameInput).value = '';
+      document.querySelector(UISelectors.itemCaloriesInput).value = '';
+    },
+
+    hideList: function(){
+      document.querySelector(UISelectors.itemList).style.display = 'none';
+    }    
   }
 
 })();
@@ -136,6 +147,9 @@ const App = (function(ItemCtrl, UICtrl){
 
       //Add item to UI list
       UICtrl.addListItem(newItem);
+
+      //Clear fields
+      UICtrl.clearInput();
     }
 
     console.log(input);
@@ -149,8 +163,13 @@ const App = (function(ItemCtrl, UICtrl){
       //Fetch items from data structure
       const items = ItemCtrl.getItems();
 
-      //Populate list with items
-      UICtrl.populateItemList(items);
+      //Check if any items
+      if (items.length === 0) {
+        UICtrl.hideList();
+      } else {
+        //Populate list with items
+        UICtrl.populateItemList(items);
+      };
 
       //Load event listeners
       LoadEventListners();
